@@ -76,7 +76,7 @@ let workEnd=(start,dur,excludeSunday=false)=>{let d=fromISO(start),count=0;while
 let workCount=(a,b,excludeSunday=false)=>{let d=fromISO(a),e=fromISO(b),n=0;while(d<=e){if(!excludeSunday||d.getDay()!==0)n++;d.setDate(d.getDate()+1)}return n};
 let isActive=(t,key)=>key>=t.start&&key<=t.end&&!(t.skipDates||[]).includes(key)&&!(t.excludeSunday&&fromISO(key).getDay()===0);
 function bookKey(subject,book){return subject+'::'+book}
-function load(){try{let x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.tasks)){data={tasks:x.tasks.map(t=>({...t,skipDates:Array.isArray(t.skipDates)?t.skipDates:[],showSubject:t.showSubject!==false,showBook:t.showBook!==false,showRange:t.showRange!==false,excludeSunday:t.excludeSunday!==false})),books:x.books||{},goals:x.goals||{}};for(const [k,v] of Object.entries(data.books)){if(!k.includes('::')){let task=data.tasks.find(t=>t.book===k);let nk=bookKey(task?.subject||'其他',k);if(!data.books[nk])data.books[nk]=v;delete data.books[k]}}}}catch(e){}}
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.tasks)){data={tasks:x.tasks.map(t=>({...t,skipDates:Array.isArray(t.skipDates)?t.skipDates:[],showSubject:t.showSubject!==false,showBook:t.showBook!==false,showRange:t.showRange!==false,excludeSunday:t.excludeSunday!==false})),books:x.books||{},goals:x.goals||{}};for(const [k,v] of Object.entries(data.books)){if(!k.includes('::')){let task=data.tasks.find(t=>t.book===k);let nk=bookKey(task?.subject||'기타',k);if(!data.books[nk])data.books[nk]=v;delete data.books[k]}}}}catch(e){}}
 function save(){localStorage.setItem(KEY,JSON.stringify(data))}
 function showToast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',2200)}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -91,7 +91,7 @@ function render(){
  el.addEventListener('click',e=>{e.stopPropagation();if(!el.dataset.suppress)openEdit(t.id)});el.addEventListener('pointerdown',startGesture);cell.appendChild(el)});
  cell.addEventListener('click',()=>openDay(key));days.appendChild(cell)}
  const month=iso(new Date(view.getFullYear(),view.getMonth(),1)).slice(0,7);
-  const monthStart=month+'-01',monthEnd=iso(new Date(view.getFullYear(),view.getMonth()+1,0));let activeDays=new Set(),monthly={};
+ const monthStart=month+'-01',monthEnd=iso(new Date(view.getFullYear(),view.getMonth()+1,0));let activeDays=new Set(),monthly={};
  data.tasks.forEach(t=>{let d=t.start>monthStart?t.start:monthStart,end=t.end<monthEnd?t.end:monthEnd;while(d<=end){if(isActive(t,d)){activeDays.add(d);let k=bookKey(t.subject,t.book||'문제집 미입력');if(!monthly[k])monthly[k]={subject:t.subject,book:t.book||'문제집 미입력',days:new Set(),ranges:new Set()};monthly[k].days.add(d);if(t.range)monthly[k].ranges.add(t.range)}d=addDays(d,1)}});
  $('taskCount').textContent=activeDays.size+'일';$('doneCount').textContent=data.tasks.filter(t=>t.done&&t.start<=monthEnd&&t.end>=monthStart).length+'개';$('bookCount').textContent=Object.keys(monthly).length+'권';$('monthDetails').innerHTML=Object.values(monthly).length?Object.values(monthly).sort((a,b)=>a.subject.localeCompare(b.subject)).map(x=>`<div class="monthbook"><b>${esc(x.subject)} · ${esc(x.book)}</b><small>${x.days.size}일 공부 · 범위: ${esc([...x.ranges].join(', ')||'미입력')}</small></div>`).join(''):'이번 달 달력에 등록된 공부 기록이 없어요.';renderBooks();renderSaved();renderGoals();
 }
@@ -109,7 +109,7 @@ function openDay(key){selectedDay=key;let d=fromISO(key);$('dayTitle').textConte
 function skipOneDay(id,key){let t=data.tasks.find(x=>x.id===id);if(!t)return;if(!confirm('이 일정에서 선택한 하루를 제외할까요?'))return;t.skipDates=[...(t.skipDates||[]),key];t.skipDates=[...new Set(t.skipDates)];t.duration=Math.max(1,(t.duration||workCount(t.start,t.end,!!t.excludeSunday))-1);save();$('dayBack').classList.remove('show');render();showToast('선택한 날짜를 일정에서 제외했어요.')}
 function reuseTask(id){let t=data.tasks.find(x=>x.id===id);if(!t)return;openNew();$('subject').value=t.subject;$('book').value=t.book||'';$('duration').value=t.duration||3;$('excludeSunday').checked=t.excludeSunday!==false;$('range').value=t.range||'';$('showSubject').checked=t.showSubject!==false;$('showBook').checked=t.showBook!==false;$('showRange').checked=t.showRange!==false;$('color').value=t.color||palette[t.subject]||'#cccccc';$('done').value='false';showToast('기존 일정 내용을 불러왔어요. 시작일을 확인하고 저장하세요.')}
 function cascadeAfter(anchor){let later=data.tasks.filter(t=>t.id!==anchor.id&&t.start>=anchor.start).sort((a,b)=>a.start.localeCompare(b.start));let cursor=anchor.end;
- for(let t of later){if(t.start<=cursor){let dur=Math.max(1,t.duration||workCount(t.start,t.end,!!t.excludeSunday));t.start=addDays(cursor,1);while(excluded(t).includes(fromISO(t.start).getDay()))t.start=addDays(t.start,1);t.end=workEnd(t.start,dur,!!t.excludeSunday);t.skipDates=(t.skipDates||[]).filter(x=>x<t.start||x>t.end);cursor=t.end}else if(t.end>cursor){cursor=t.end}}
+ for(let t of later){if(t.start<=cursor){let dur=Math.max(1,t.duration||workCount(t.start,t.end,!!t.excludeSunday));t.start=addDays(cursor,1);while(fromISO(t.start).getDay()===0)t.start=addDays(t.start,1);t.end=workEnd(t.start,dur,!!t.excludeSunday);t.skipDates=(t.skipDates||[]).filter(x=>x<t.start||x>t.end);cursor=t.end}else if(t.end>cursor){cursor=t.end}}
 }
 $('addBtn').onclick=()=>openNew();$('cancelBtn').onclick=closeModal;$('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};$('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};$('todayBtn').onclick=()=>{view=new Date();render()};
 $('subject').onchange=()=>{$('color').value=palette[$('subject').value]||'#cccccc'};
@@ -160,7 +160,7 @@ function dailyBackup(){try{let a=JSON.parse(localStorage.getItem(BACKUP_KEY)||'[
 function excluded(t){return Array.isArray(t.excludeDays)?t.excludeDays:(t.excludeSunday?[0]:[])}
 workEnd=(start,dur,excludeSunday=false,excludeDays=null)=>{let ex=Array.isArray(excludeDays)?excludeDays:(excludeSunday?[0]:[]),d=fromISO(start),n=0,limit=Math.max(1,Number(dur)||1);while(n<limit){if(!ex.includes(d.getDay()))n++;if(n<limit)d.setDate(d.getDate()+1)}return iso(d)};
 workCount=(a,b,excludeSunday=false,excludeDays=null)=>{let ex=Array.isArray(excludeDays)?excludeDays:(excludeSunday?[0]:[]),d=fromISO(a),e=fromISO(b),n=0;while(d<=e){if(!ex.includes(d.getDay()))n++;d.setDate(d.getDate()+1)}return n};
- isActive=(t,key)=>key>=t.start&&key<=t.end&&!(t.skipDates||[]).includes(key)&&!excluded(t).includes(fromISO(key).getDay());
+isActive=(t,key)=>key>=t.start&&key<=t.end&&!(t.skipDates||[]).includes(key)&&!excluded(t).includes(fromISO(key).getDay());
 function setWeekPicker(days){$('excludeDaysPicker').innerHTML=WEEKDAYS.map((w,i)=>`<label><input type="checkbox" value="${i}" ${days.includes(i)?'checked':''}>${w}요일</label>`).join('')}
 function pickedWeekdays(){return [...$('excludeDaysPicker').querySelectorAll('input:checked')].map(x=>Number(x.value))}
 function nextStart(){if(!data.tasks.length)return iso(new Date());let latest=data.tasks.reduce((m,t)=>t.end>m?t.end:m,data.tasks[0].end),d=addDays(latest,1),ex=data.settings.excludeDays||[];while(ex.includes(fromISO(d).getDay()))d=addDays(d,1);return d}
@@ -170,45 +170,124 @@ const oldEdit=openEdit;
 openEdit=function(id){oldEdit(id);let t=data.tasks.find(x=>x.id===id);if(t){$('duration').value=workCount(t.start,t.end,false,excluded(t));setWeekPicker(excluded(t));$('excludeSunday').checked=excluded(t).includes(0)}};
 // Schedule save uses selected weekdays and preserves date-level completion.
 $('saveBtn').onclick=()=>{let subject=$('subject').value,book=$('book').value.trim(),start=$('start').value,duration=Math.max(1,Math.min(365,Number($('duration').value)||1));if(!start){showToast('시작일을 선택해 주세요.');return}let ex=pickedWeekdays(),end=workEnd(start,duration,false,ex),color=$('color').value,old=editing?data.tasks.find(t=>t.id===editing):null;if(book){let k=bookKey(subject,book);data.books[k]=color;data.hiddenBooks=data.hiddenBooks.filter(x=>x!==k);data.hiddenSaved=data.hiddenSaved.filter(x=>x!==k)}let obj={...(old||{}),id:editing||('t'+Date.now()+Math.random().toString(16).slice(2,6)),subject,book,range:$('range').value.trim(),start,end,duration,excludeDays:ex,excludeSunday:ex.includes(0),color,done:$('done').value==='true',doneDates:old?.doneDates||[],skipDates:old?.skipDates||[],showSubject:$('showSubject').checked,showBook:$('showBook').checked,showRange:$('showRange').checked};if(editing){let i=data.tasks.findIndex(t=>t.id===editing);if(i>=0)data.tasks[i]=obj}else data.tasks.push(obj);cascadeAfter(obj);save();closeModal();render();showToast('일정을 저장했어요.')};
-// Exclusion-aware shifting and resize.
 const oldCascade=cascadeAfter;
 const oldReuseTask=reuseTask;reuseTask=function(id){let t=data.tasks.find(x=>x.id===id);oldReuseTask(id);if(t){$('duration').value=t.duration||workCount(t.start,t.end,false,excluded(t));setWeekPicker(excluded(t));$('excludeSunday').checked=excluded(t).includes(0)}};
-skipOneDay=function(id,key){let t=data.tasks.find(x=>x.id===id);if(!t)return;if(!confirm('이 일정에서 선택한 하루를 제외할까요?'))return;t.skipDates=[...new Set([...(t.skipDates||[]),key])];t.duration=Math.max(1,(t.duration||workCount(t.start,t.end,false,excluded(t)))-1);save();$('dayBack').classList.remove('show');render();showToast('선택한 날짜를 일정에서 제외했어요.')};
+skipOneDay=function(id,key){let t=data.tasks.find(x=>x.id===id);if(!t)return;if(!confirm('이 일정에서 선택한 하루를 제외할까요?'))return;t.skipDates=[...new Set([...(t.skipDates||[]),key])];t.duration=Math.max(1,(t.duration||workCount(t.start,t.end,false,excluded(t)))-1);save();$('dayBack').classList.remove('show');render();showToast('선택한 날짜を 일정에서 제외했어요.')};
 cascadeAfter=function(anchor){let later=data.tasks.filter(t=>t.id!==anchor.id&&t.start>=anchor.start).sort((a,b)=>a.start.localeCompare(b.start));let cursor=anchor.end;for(let t of later){if(t.start<=cursor){let ex=excluded(t),dur=Math.max(1,t.duration||workCount(t.start,t.end,false,ex));t.start=addDays(cursor,1);while(ex.includes(fromISO(t.start).getDay()))t.start=addDays(t.start,1);t.end=workEnd(t.start,dur,false,ex);t.skipDates=(t.skipDates||[]).filter(x=>x<t.start||x>t.end);cursor=t.end}else if(t.end>cursor)cursor=t.end}};
-// Current schedule panel and grouped saved library.
 const side=document.querySelector('.side');
 const currentPanel=document.createElement('div');currentPanel.className='panel';currentPanel.id='currentPanel';currentPanel.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">현재 적용 중인 일정</h2><div class="panel-tools"><button class="btn small" id="currentEditBtn">편집</button><button class="btn small" id="currentMore">더보기</button></div></div><div id="currentList" style="margin-top:8px"></div>';side.insertBefore(currentPanel,$('savedPanel'));
 function taskRow(t){return `<div class="savedrow"><div class="desc"><b>${esc(t.subject)} · ${esc(t.book||'문제집 미입력')}</b><br><span class="hint">${esc(t.start)} ~ ${esc(t.end)} · ${t.duration||1}일</span></div><div class="savedactions"><button class="btn small" data-reuse="${esc(t.id)}">다시 등록</button><button class="tiny" data-edit="${esc(t.id)}">수정</button>${currentEditing?`<button class="tiny" data-task-up="${esc(t.id)}">↑</button><button class="tiny" data-task-down="${esc(t.id)}">↓</button><button class="tiny" data-task-del="${esc(t.id)}">삭제</button>`:''}</div></div>`}
 function renderCurrent(){let order=data.settings.taskOrder||[],a=[...data.tasks].sort((x,y)=>{let ix=order.indexOf(x.id),iy=order.indexOf(y.id);if(ix<0&&iy<0)return x.start.localeCompare(y.start);return (ix<0?9999:ix)-(iy<0?9999:iy)}),shown=currentExpanded?a:a.slice(0,1);$('currentList').innerHTML=shown.length?shown.map(taskRow).join(''):'<div class="empty">현재 적용 중인 일정이 없습니다.</div>';$('currentList').querySelectorAll('[data-reuse]').forEach(b=>b.onclick=()=>reuseTask(b.dataset.reuse));$('currentList').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));$('currentList').querySelectorAll('[data-task-up],[data-task-down]').forEach(b=>b.onclick=()=>{let id=b.dataset.taskUp||b.dataset.taskDown,ids=[...data.tasks].sort((x,y)=>{let a=order.indexOf(x.id),c=order.indexOf(y.id);return (a<0?9999:a)-(c<0?9999:c)}).map(x=>x.id),i=ids.indexOf(id),j=i+(b.dataset.taskUp?-1:1);if(j<0||j>=ids.length)return;[ids[i],ids[j]]=[ids[j],ids[i]];data.settings.taskOrder=ids;save();renderCurrent()});$('currentList').querySelectorAll('[data-task-del]').forEach(b=>b.onclick=()=>{if(!confirm('이 일정을 삭제할까요?'))return;data.tasks=data.tasks.filter(t=>t.id!==b.dataset.taskDel);save();render()});$('currentMore').textContent=currentExpanded?'접기':'더보기';$('currentEditBtn').textContent=currentEditing?'편집 완료':'편집';}
 function renderSaved(){let m=new Map();data.tasks.forEach(t=>{let k=bookKey(t.subject,t.book||'문제집 미입력');if(!m.has(k))m.set(k,{subject:t.subject,book:t.book||'문제집 미입력',items:[]});m.get(k).items.push(t)});let a=[...m.entries()].filter(([k])=>!data.hiddenSaved.includes(k)),order=data.settings.savedOrder||[];a.sort((x,y)=>{let i=order.indexOf(x[0]),j=order.indexOf(y[0]);return (i<0?9999:i)-(j<0?9999:j)});let shown=savedExpanded?a:a.slice(0,3);$('savedList').innerHTML=shown.length?shown.map(([k,g])=>`<div class="savedrow"><div class="desc"><b>${esc(g.subject)} · ${esc(g.book)}</b><br><span class="hint">등록 일정 ${g.items.length}개</span></div><div class="savedactions"><button class="btn small" data-group="${esc(k)}">다시 등록</button>${savedEditing?`<button class="tiny" data-group-up="${esc(k)}">↑</button><button class="tiny" data-group-down="${esc(k)}">↓</button><button class="tiny" data-group-hide="${esc(k)}">삭제</button>`:''}</div></div>`).join(''):'<div class="empty">등록한 일정이 없습니다.</div>';$('savedList').querySelectorAll('[data-group]').forEach(b=>{if(b.dataset.group)b.onclick=()=>{let t=data.tasks.find(x=>bookKey(x.subject,x.book||'문제집 미입력')===b.dataset.group);if(t)reuseTask(t.id)}});$('savedList').querySelectorAll('[data-group-up],[data-group-down]').forEach(b=>b.onclick=()=>{let k=b.dataset.groupUp||b.dataset.groupDown,keys=a.map(x=>x[0]),i=keys.indexOf(k),j=i+(b.dataset.groupUp?-1:1);if(j<0||j>=keys.length)return;[keys[i],keys[j]]=[keys[j],keys[i]];data.settings.savedOrder=keys;save();renderSaved()});$('savedList').querySelectorAll('[data-group-hide]').forEach(b=>b.onclick=()=>{if(!confirm('이 그룹을 보관함에서만 삭제할까요? 기존 일정은 유지돼요.'))return;data.hiddenSaved.push(b.dataset.groupHide);save();renderSaved()});$('savedMore').textContent=savedExpanded?'접기':'더보기';$('savedEditBtn').textContent=savedEditing?'편집 완료':'편집'}
 $('currentMore').onclick=()=>{currentExpanded=!currentExpanded;renderCurrent()};$('currentEditBtn').onclick=()=>{currentEditing=!currentEditing;renderCurrent()};$('savedMore').onclick=()=>{savedExpanded=!savedExpanded;renderSaved()};$('savedEditBtn').onclick=()=>{savedEditing=!savedEditing;renderSaved()};
-// Book list opens as a modal from the monthly book count.
-$('bookPanel').style.display='none';
+const goalPanel=$('goalPanel');goalPanel.querySelector('h2').insertAdjacentHTML('afterend','<span class="hint">기본 3개 표시 · 색상 및 순서 변경 가능</span>');
+const bookPanel=$('bookPanel');bookPanel.querySelector('h2').insertAdjacentHTML('afterend','<div style="display:flex;justify-content:flex-end"><button class="btn small" id="bookMore">더보기</button></div>');
 const bookModal=document.createElement('div');bookModal.className='modalback';bookModal.id='bookModalBack';bookModal.innerHTML='<div class="modal"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h2 style="margin:0">등록된 문제집</h2><button class="btn small" id="bookModalClose">닫기</button></div><div id="bookModalContent"></div></div>';
-document.body.appendChild(bookModal);$('bookModalContent').appendChild($('bookList'));$('bookCount').parentElement.style.cursor='pointer';$('bookCount').parentElement.onclick=()=>{renderBooks();bookModal.classList.add('show')};$('bookModalClose').onclick=()=>bookModal.classList.remove('show');bookModal.addEventListener('click',e=>{if(e.target===bookModal)bookModal.classList.remove('show')});
-// Book list deletion hides an entry without deleting its linked schedules/goals.
+document.body.appendChild(bookModal);$('bookModalContent').appendChild($('bookList'));$('bookCount').parentElement.style.cursor='pointer';$('bookCount').parentElement.onclick=()=>{renderBooks();bookModal.classList.add('show')};$('bookModalClose').onclick=()=>bookModal.classList.remove('show');$('bookMore').onclick=()=>{bookExpanded=!bookExpanded;renderBooks()};bookModal.addEventListener('click',e=>{if(e.target===bookModal)bookModal.classList.remove('show')});
 function allBookKeys(){let a=new Set([...Object.keys(data.books||{}),...data.tasks.filter(t=>t.book).map(t=>bookKey(t.subject,t.book)),...Object.keys(data.goals||{})]);return [...a].filter(k=>!data.hiddenBooks.includes(k)).sort()}
-function renderBooks(){let a=allBookKeys();$('bookList').innerHTML=a.length?a.map(k=>{let [sub,name]=k.split('::');return `<div class="bookrow"><span class="name">${esc(sub)} · ${esc(name)}</span><button data-hidebook="${esc(k)}">목록 삭제</button></div>`}).join(''):'<div class="empty">저장된 문제집이 없습니다.</div>';$('bookList').querySelectorAll('[data-hidebook]').forEach(b=>b.onclick=()=>{let k=b.dataset.hidebook;if(!confirm('문제집 목록에서만 삭제할까요? 기존 일정과 회독 목표는 유지돼요.'))return;data.hiddenBooks.push(k);save();render();showToast('문제집 목록에서 숨겼어요.')})}
-// Monthly comparison and unique book study days.
+let bookExpanded=false;
+function renderBooks(){
+ let a=allBookKeys(),shown=bookExpanded?a:a.slice(0,3);
+ $('bookList').innerHTML=shown.length?shown.map(k=>{let [sub,name]=k.split('::');return `<div class="bookrow"><span class="name">${esc(sub)} · ${esc(name)}</span><button data-hidebook="${esc(k)}">삭제</button></div>`}).join(''):'<div class="empty">저장된 문제집이 없습니다.</div>';
+ $('bookList').querySelectorAll('[data-hidebook]').forEach(b=>b.onclick=()=>{let k=b.dataset.hidebook;if(!confirm('문제집 등록 내역에서만 삭제할까요? 기존 일정과 회독 목표는 유지돼요.'))return;data.hiddenBooks.push(k);save();render();showToast('문제집 등록 내역에서 삭제했어요.')});
+ let more=$('bookMore');if(more)more.textContent=bookExpanded?'접기':'더보기';
+ if(more)more.style.display=a.length>3?'':'none';
+}
 let statsTitle=$('statsPanel').querySelector('h2');statsTitle.innerHTML='이번 달 공부 현황 <span style="float:right"><button class="tiny" id="monthPrev">‹</button> <button class="tiny" id="monthNext">›</button></span>';
-function renderStats(){let base=new Date(view.getFullYear(),view.getMonth()+statsMonthOffset,1),m=iso(base).slice(0,7),a=m+'-01',b=iso(new Date(base.getFullYear(),base.getMonth()+1,0)),pm=iso(new Date(base.getFullYear(),base.getMonth()-1,1)).slice(0,7),pa=pm+'-01',pb=iso(new Date(base.getFullYear(),base.getMonth(),0)),all=new Set(),done=new Set(),groups=new Map(),prev=new Set();for(let t of data.tasks){let d=t.start>a?t.start:a,e=t.end<b?t.end:b;while(d<=e){if(isActive(t,d)){all.add(d);let k=bookKey(t.subject,t.book||'문제집 미입력');if(!groups.has(k))groups.set(k,{subject:t.subject,book:t.book||'문제집 미입력',days:new Set()});groups.get(k).days.add(d);if(t.done||(t.doneDates||[]).includes(d))done.add(d)}d=addDays(d,1)}let x=t.start>pa?t.start:pa,y=t.end<pb?t.end:pb;while(x<=y){if(isActive(t,x))prev.add(x);x=addDays(x,1)}}$('taskCount').textContent=all.size+'일';$('doneCount').textContent=done.size+'일';$('bookCount').textContent=groups.size+'권';let sum=[...groups.values()].reduce((n,g)=>n+g.days.size,0)||1;$('monthDetails').innerHTML=`<div class="hint"><b>${m.replace('-','년 ')}월</b> · 전월 ${prev.size}일 / 이번 달 ${all.size}일 (${all.size-prev.size>=0?'+':''}${all.size-prev.size}일)</div>`+[...groups.values()].sort((x,y)=>y.days.size-x.days.size).map(g=>`<div class="monthbook"><b>${esc(g.subject)} · ${esc(g.book)}</b><small>${g.days.size}일 · 문제집 공부일 비중 ${Math.round(g.days.size/sum*100)}%</small></div>`).join('')||'<div class="empty">이번 달 공부 기록이 없어요.</div>';$('monthPrev').onclick=()=>{statsMonthOffset--;renderStats()};$('monthNext').onclick=()=>{statsMonthOffset++;renderStats()}}
-// Goal list: three visible by default, colored and reorderable.
+function renderStats(){
+ let base=new Date(view.getFullYear(),view.getMonth()+statsMonthOffset,1);
+ let m=iso(base).slice(0,7),a=m+'-01',b=iso(new Date(base.getFullYear(),base.getMonth()+1,0));
+ let prevBase=new Date(base.getFullYear(),base.getMonth()-1,1),pm=iso(prevBase).slice(0,7),pa=pm+'-01',pb=iso(new Date(base.getFullYear(),base.getMonth(),0));
+ function collect(from,to){
+  let studyDays=new Set(),completedDays=new Set(),completedTasks=new Set(),books=new Map();
+  for(let t of data.tasks){
+   let s=t.start>from?t.start:from,e=t.end<to?t.end:to;
+   if(s>e)continue;
+   let d=s;
+   while(d<=e){
+    if(isActive(t,d)){
+     studyDays.add(d);
+     let k=bookKey(t.subject,t.book||'문제집 미입력');
+     if(!books.has(k))books.set(k,{subject:t.subject,book:t.book||'문제집 미입력',days:new Set()});
+     books.get(k).days.add(d);
+     if(t.done||(t.doneDates||[]).includes(d)){completedDays.add(d);completedTasks.add(t.id+'@'+d)}
+    }
+    d=addDays(d,1);
+   }
+  }
+  return {studyDays,completedDays,completedTasks,books};
+ }
+ let cur=collect(a,b),prev=collect(pa,pb);
+ let diff=(x,y)=>{let n=x-y;return (n>0?'+':'')+n};
+ let totalBookDays=[...cur.books.values()].reduce((n,x)=>n+x.days.size,0)||1;
+ let books=[...cur.books.values()].sort((x,y)=>y.days.size-x.days.size);
+ $('taskCount').textContent=cur.studyDays.size+'일';
+ $('doneCount').textContent=cur.completedTasks.size+'건';
+ $('bookCount').textContent=cur.books.size+'권';
+ $('monthDetails').innerHTML=
+  `<div class="monthbook"><b>${pm} ↔ ${m} 비교</b><small>공부 일수: ${prev.studyDays.size}일 → ${cur.studyDays.size}일 (${diff(cur.studyDays.size,prev.studyDays.size)})<br>완료 일정: ${prev.completedTasks.size}건 → ${cur.completedTasks.size}건 (${diff(cur.completedTasks.size,prev.completedTasks.size)})</small></div>`+
+  (books.map(g=>`<div class="monthbook"><b>${esc(g.subject)} · ${esc(g.book)}</b><small>${g.days.size}일 · 이번 달 문제집별 공부 비율 ${Math.round(g.days.size/totalBookDays*100)}%</small></div>`).join('')||'<div class="empty">이번 달 공부 기록이 없어요.</div>');
+ $('monthPrev').onclick=()=>{statsMonthOffset--;renderStats()};
+ $('monthNext').onclick=()=>{statsMonthOffset++;renderStats()};
+}
 function renderGoals(){let entries=Object.entries(data.goals||{}),shown=goalExpanded?entries:entries.slice(0,3);$('goalList').innerHTML=shown.length?shown.map(([k,g])=>{let total=Math.max(1,Number(g.units)||1),target=Math.max(1,Number(g.rounds)||1),r=Math.max(1,Number(g.currentRound)||1),u=Math.max(0,Math.min(total,Number(g.currentUnit)||0)),done=Math.min(target*total,Math.max(0,(r-1)*total+u)),pct=Math.round(done/(target*total)*100);return `<div class="goalrow" style="--goal-color:${g.color||palette[g.subject]||'#7183b5'}"><div class="goalhead"><b>${esc(g.subject)} · ${esc(g.book)}</b><div class="row-actions"><button class="tiny" data-goal-up="${esc(k)}">↑</button><button class="tiny" data-goal-down="${esc(k)}">↓</button><button class="btn small" data-editgoal="${esc(k)}">수정</button></div></div><div class="goalbar"><span style="width:${pct}%"></span></div><div class="goalmeta">현재 ${r}회독 ${u}단원 · 목표 ${target}회독 · ${pct}%</div></div>`}).join(''):'<div class="empty">문제집별 회독 목표를 설정할 수 있어요.</div>';$('goalList').querySelectorAll('[data-editgoal]').forEach(b=>b.onclick=()=>openGoal(b.dataset.editgoal));$('goalList').querySelectorAll('[data-goal-up],[data-goal-down]').forEach(b=>b.onclick=()=>{let keys=Object.keys(data.goals),k=b.dataset.goalUp||b.dataset.goalDown,i=keys.indexOf(k),j=i+(b.dataset.goalUp?-1:1);if(j<0||j>=keys.length)return;[keys[i],keys[j]]=[keys[j],keys[i]];data.goals=Object.fromEntries(keys.map(x=>[x,data.goals[x]]));save();renderGoals()});$('goalMore').textContent=goalExpanded?'접기':'더보기'}
 $('goalMore').onclick=()=>{goalExpanded=!goalExpanded;renderGoals()};
-// Goal color field and save behavior.
 let gc=document.createElement('div');gc.className='field';gc.innerHTML='<label>목표 색상</label><input id="goalColor" type="color" value="#7183b5">';$('goalBook').parentElement.insertAdjacentElement('afterend',gc);
 const baseOpenGoal=openGoal;openGoal=function(k=null){baseOpenGoal(k);$('goalColor').value=(k&&data.goals[k]?.color)||palette[$('goalSubject').value]||'#7183b5'};
 $('saveGoalBtn').onclick=()=>{let subject=$('goalSubject').value,book=$('goalBook').value.trim(),units=Math.max(1,Number($('goalUnits').value)||1),rounds=Math.max(1,Number($('goalRounds').value)||1),currentRound=Math.max(1,Number($('goalCurrentRound').value)||1),currentUnit=Math.max(0,Math.min(units,Number($('goalCurrentUnit').value)||0));if(!book){showToast('문제집 이름을 입력해 주세요.');return}let k=bookKey(subject,book);data.goals[k]={subject,book,units,rounds,currentRound,currentUnit,color:$('goalColor').value};data.books[k]=data.books[k]||palette[subject]||'#ccc';data.hiddenBooks=data.hiddenBooks.filter(x=>x!==k);data.hiddenSaved=data.hiddenSaved.filter(x=>x!==k);save();$('goalBack').classList.remove('show');render();showToast('회독 목표를 저장했어요.')};
-// Theme + configurable panel order.
-function applyTheme(){let t=data.settings?.theme||'기본',v={기본:['#f6f4ef','#343c54'],라벤더:['#f4f0f8','#75618f'],민트:['#eef6f2','#397965'],다크:['#20232b','#8d9bc7']}[t]||['#f6f4ef','#343c54'];document.documentElement.style.setProperty('--bg',v[0]);document.documentElement.style.setProperty('--accent',v[1])}
-$('settingsBtn').onclick=()=>{let t=prompt('테마를 입력하세요: 기본 / 라벤더 / 민트 / 다크',data.settings.theme||'기본');if(t===null)return;if(!['기본','라벤더','민트','다크'].includes(t)){showToast('기본, 라벤더, 민트, 다크 중 선택해 주세요.');return}data.settings.theme=t;applyTheme();let wd=prompt('새 일정에서 제외할 요일 번호를 쉼표로 입력하세요. 일=0, 월=1, 화=2, 수=3, 목=4, 금=5, 토=6 (예: 0,6)',(data.settings.excludeDays||[0]).join(','));if(wd!==null){let days=wd.split(',').map(x=>Number(x.trim()));if(days.every(x=>Number.isInteger(x)&&x>=0&&x<=6)){data.settings.excludeDays=[...new Set(days)]}}let order=prompt('패널 순서를 숫자로 입력하세요. 현재 적용 중인 일정=1, 보관함=2, 회독 목표=3, 문제집 목록=4, 공부 현황=5', '1,2,3,4,5');if(order!==null){let ids=['currentPanel','savedPanel','goalPanel','bookPanel','statsPanel'],nums=order.split(',').map(x=>Number(x.trim())-1);if(nums.length===5&&new Set(nums).size===5&&nums.every(x=>x>=0&&x<5)){data.settings.panelOrder=nums.map(i=>ids[i]);let parent=$('.side');data.settings.panelOrder.forEach(id=>parent.appendChild($(id)))}}save();showToast('설정을 저장했어요.')};
-// Main render wrapper; original renderer remains responsible for calendar layout.
+function applyTheme(){let t=data.settings?.theme||'기본',v={기본:['#f6f4ef','#343c54'],라벤더:['#f4f0f8','#75618f'],민트:['#eef6f2','#397965'],다크:['#20232b','#8d9bc7']}[t]||['#f6f4ef','#343c54'];let bg=/^#[0-9a-fA-F]{6}$/.test(data.settings?.backgroundColor||'')?data.settings.backgroundColor:v[0];document.documentElement.style.setProperty('--bg',bg);document.documentElement.style.setProperty('--accent',v[1])}
+$('settingsBtn').onclick=()=>{
+ let t=prompt('테마를 입력하세요: 기본 / 라벤더 / 민트 / 다크',data.settings.theme||'기본');
+ if(t===null)return;
+ if(!['기본','라벤더','민트','다크'].includes(t)){showToast('기본, 라벤더, 민트, 다크 중 선택해 주세요.');return}
+ data.settings.theme=t;
+ let bg=prompt('페이지 배경색을 HEX 코드로 입력하세요. 예: #F6F4EF',data.settings.backgroundColor||'');
+ if(bg!==null&&bg.trim()){
+  let v=bg.trim();if(!/^#[0-9a-fA-F]{6}$/.test(v)){showToast('배경색은 #RRGGBB 형식으로 입력해 주세요.');return}
+  data.settings.backgroundColor=v;
+ }
+ let wd=prompt('제외할 요일 번호를 쉼표로 입력하세요. 일=0, 월=1, 화=2, 수=3, 목=4, 금=5, 토=6 (예: 0,6)',(data.settings.excludeDays||[0]).join(','));
+ if(wd!==null){
+  let days=wd.split(',').map(x=>Number(x.trim()));
+  if(days.every(x=>Number.isInteger(x)&&x>=0&&x<=6))data.settings.excludeDays=[...new Set(days)];
+  else {showToast('요일은 0~6 사이 숫자로 입력해 주세요.');return}
+ }
+ let ids=['currentPanel','savedPanel','goalPanel','bookPanel','statsPanel'];
+ let current=(data.settings.panelOrder||ids).join(', ');
+ let order=prompt('패널 순서를 쉼표로 입력하세요.\n1 현재 일정 / 2 일정 보관함 / 3 회독 목표 / 4 문제집 내역 / 5 공부 내역','1,2,3,4,5');
+ if(order!==null){
+  let nums=order.split(',').map(x=>Number(x.trim())-1);
+  if(nums.length===5&&new Set(nums).size===5&&nums.every(x=>x>=0&&x<5)){
+   data.settings.panelOrder=nums.map(i=>ids[i]);
+   data.settings.panelOrder.forEach(id=>{let el=$(id);if(el)side.appendChild(el)});
+  } else {showToast('패널 순서는 1~5를 한 번씩 입력해 주세요.');return}
+ }
+ save();applyTheme();showToast('테마·배경색·제외 요일·패널 순서를 저장했어요.')
+};
 const originalRender=render;
 render=function(){originalRender();renderCurrent();renderSaved();renderBooks();renderGoals();renderStats();applyTheme();document.querySelectorAll('.task').forEach(el=>{let t=data.tasks.find(x=>x.id===el.dataset.id),key=el.dataset.date;if(t&&(t.done||(t.doneDates||[]).includes(key)))el.classList.add('done')})};
-// Apply saved panel order after panels exist.
-function applyPanelOrder(){let ids=['currentPanel','savedPanel','goalPanel','bookPanel','statsPanel'],order=data.settings?.panelOrder||ids;order.forEach(id=>{let el=$(id);if(el)side.appendChild(el)})}
-load();applyPanelOrder();render();
-// End STUDY FLOW enhancement
+function applyPanelOrder(){let ids=['currentPanel','savedPanel','goalPanel','bookPanel','statsPanel'],order=(data.settings?.panelOrder||ids).filter(id=>ids.includes(id));ids.forEach(id=>{if(!order.includes(id))order.push(id)});order.forEach(id=>{let el=$(id);if(el)side.appendChild(el)});}
 
+// Restore every extension field as well as the original tasks/books/goals.
+const enhancementLoad = load;
+load = function(){
+  enhancementLoad();
+  try {
+    const raw = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(raw && Array.isArray(raw.tasks)){
+      data.settings = raw.settings || data.settings || {};
+      data.hiddenBooks = Array.isArray(raw.hiddenBooks) ? raw.hiddenBooks : [];
+      data.hiddenSaved = Array.isArray(raw.hiddenSaved) ? raw.hiddenSaved : [];
+      data.goals = raw.goals || data.goals || {};
+    }
+  } catch(e) {}
+  normalize();
+  lastState = JSON.stringify(data);
+  dailyBackup();
+  applyTheme();
+};
+setInterval(()=>{dailyBackup()}, 60 * 60 * 1000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)dailyBackup()});
+load();applyPanelOrder();render();
 </script>
 </body></html>
