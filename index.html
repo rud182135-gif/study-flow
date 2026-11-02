@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -10,7 +11,7 @@
 <title>STUDY FLOW</title>
 <style>
 :root{--bg:#f6f4ef;--paper:#fff;--ink:#252525;--muted:#858585;--line:#e9e6df;--accent:#343c54;--shadow:0 8px 26px #28231a12}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;transition:background .2s ease}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;padding:22px 22px 50px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;background:#343c54;color:white;display:grid;place-items:center;font-weight:800;letter-spacing:-1px}
 h1{font-size:21px;letter-spacing:1.4px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -23,31 +24,266 @@ h1{font-size:21px;letter-spacing:1.4px;margin:0}.sub{font-size:12px;color:var(--
 .task.done{opacity:.58;text-decoration:line-through}.task .grip{position:absolute;right:0;top:0;width:15px;height:100%;cursor:ew-resize;display:flex;align-items:center;justify-content:center;color:#555;font-size:12px;touch-action:none}.task.dragging{opacity:.35}.day.drop{background:#f0f2f8;outline:2px dashed #66708c;outline-offset:-3px}
 .side{display:flex;flex-direction:column;gap:14px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);min-width:0}.panel h2{font-size:14px;margin:0 0 12px}.stat{display:flex;justify-content:space-between;font-size:13px;margin:9px 0}.stat b{font-size:15px}.hint{font-size:11px;color:var(--muted);line-height:1.65}.empty{font-size:12px;color:#aaa;text-align:center;padding:14px 0}
 .bookrow,.savedrow{display:flex;align-items:center;gap:8px;font-size:12px;margin:8px 0;min-width:0}.bookrow .name,.savedrow .desc{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bookrow button{margin-left:auto;border:0;background:#f5f3ef;border-radius:7px;padding:5px 8px;font-size:11px;flex-shrink:0}
-.savedrow{align-items:center;border-top:1px solid #f0eee9;padding-top:9px}.savedrow .desc{flex:1;font-weight:600}.savedrow .savedactions{display:flex;gap:4px;flex-shrink:0}
-.panel-foot{border-top:1px dashed #f0eee9;margin-top:10px;padding-top:8px;text-align:center}.panel-foot button{width:100%;border:0;background:#faf9f6;border-radius:8px;padding:6px 0;font-size:11px;color:#666}
-.panel-foot button:hover{background:#f0eee9}
-.modalback{position:fixed;inset:0;background:#17171766;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.modalback.show{display:flex}.modal{background:white;width:min(520px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:20px;box-shadow:0 20px 70px #0003}.modal h2{margin:0 0 16px;font-size:18px}.formgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:11px}.field{min-width:0}.field input,.field select{min-width:0;max-width:100%;display:block;width:100%;padding:8px;border:1px solid var(--line);border-radius:8px}.field input[type="date"],.field input[type="number"]{min-height:42px}#duration{text-align:center}.checkrow{display:flex;align-items:center;gap:8px;font-size:12px;margin-top:10px;flex-wrap:wrap}
-.modalfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px}.rightbuttons{display:flex;gap:7px}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#343c54;color:white;border-radius:10px;padding:11px 16px;font-size:12px;display:none;z-index:50;box-shadow:0 5px 20px #0002}
-.goalrow{border-top:1px solid #f0eee9;padding:10px 0}.goalhead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}.goalbar{height:7px;background:#eee;border-radius:10px;overflow:hidden;margin:9px 0 5px}.goalbar span{display:block;height:100%;background:var(--goal-color,#7183b5);border-radius:10px}.goalmeta{font-size:10px;color:var(--muted);line-height:1.6}.monthbook{padding:8px 0;border-top:1px solid #f0eee9;font-size:12px}.monthbook small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.row-actions{display:flex;gap:4px;align-items:center}.tiny{border:0;background:#f4f2ee;border-radius:6px;padding:4px 7px;font-size:10px;color:#666}
-.dateitem{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:12px}.dateitem .row-actions{flex-shrink:0}.done-date{color:#6d9b79}.muted-date{color:#aaa}
-#bookChoices{display:none;position:absolute;z-index:5;background:white;border:1px solid var(--line);border-radius:10px;max-height:150px;overflow:auto;width:100%;box-shadow:0 5px 18px #0001}#bookChoices.show{display:block}.choice{padding:9px 11px;font-size:12px;cursor:pointer}.choice:hover{background:#f6f4ef}
-
-/* 설정 모달 전용 스타일 */
-.settings-section{border-top:1px solid var(--line);padding:14px 0}.settings-section h3{font-size:13px;margin:0 0 10px;color:#343c54}
-.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px}
-.setting-panel-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:6px}
-.setting-panel-item .panel-title{font-size:13px;font-weight:600;flex:1}
-.setting-color{width:54px;height:36px;padding:2px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
-@media(max-width:760px){.app{padding:15px 12px 35px}.layout{grid-template-columns:1fr}.side{display:flex}.day{min-height:85px;padding:5px 3px}.task{font-size:9px;padding:4px 13px 4px 5px}.monthnav strong{font-size:18px;min-width:110px}.formgrid{gap:8px}}
+.savedrow{align-items:flex-start;border-top:1px solid #f0eee9;padding-top:9px}.savedrow .desc{flex:1;white-space:normal;line-height:1.4}.savedrow .savedactions{display:flex;gap:4px;flex-shrink:0}
+.modalback{position:fixed;inset:0;background:#17171766;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.modalback.show{display:flex}.modal{background:white;width:min(520px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:20px;box-shadow:0 20px 70px #0003}.modal h2{margin:0 0 16px;font-size:18px}.formgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:11px}.field{min-width:0}.field input,.field select{min-width:0;max-width:100%;display:block}.field input[type="date"],.field input[type="number"]{width:100%;min-width:0;min-height:42px}#duration{text-align:center}.checkrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.checkrow label{display:flex;align-items:center;gap:5px;font-size:12px;color:#444}.checkrow input{width:auto!important}.goalrow{border-top:1px solid #f0eee9;padding:10px 0}.goalrow:first-child{border-top:0}.goalhead{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px}.goalbar{height:8px;background:#eee;border-radius:99px;overflow:hidden;margin:8px 0}.goalbar>span{display:block;height:100%;background:#7183b5;border-radius:99px}.goalmeta{font-size:11px;color:#777;line-height:1.5}.monthbook{padding:8px 0;border-top:1px solid #f0eee9}.monthbook:first-child{border-top:0}.monthbook b{font-size:12px}.monthbook small{display:block;color:#777;font-size:11px;margin-top:3px;line-height:1.45}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:11px;color:#777}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff;color:#222}.modalfoot{display:flex;justify-content:space-between;gap:8px;margin-top:18px}.rightbuttons{display:flex;gap:8px}.selectwrap{position:relative}.selectwrap select{appearance:auto}
+.choice-list{border:1px solid var(--line);border-radius:10px;max-height:160px;overflow:auto;margin-top:5px;display:none}.choice-list.show{display:block}.choice{padding:9px 10px;font-size:12px;border-bottom:1px solid #f2f0ec;cursor:pointer}.choice:last-child{border-bottom:0}.choice:active{background:#f4f3ef}
+.dateitems{display:flex;flex-direction:column;gap:8px}.dateitem{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}.dateitem span{min-width:0;overflow-wrap:anywhere}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#282d3e;color:white;padding:10px 15px;border-radius:10px;font-size:12px;display:none;z-index:20}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.day{min-height:105px}}
+@media(max-width:560px){.app{padding:14px 10px 30px}header{align-items:flex-start}.sub{max-width:180px}.actions .btn{padding:8px 9px;font-size:11px}.layout{gap:10px}.day{min-height:94px;padding:5px 3px}.num{width:22px;height:22px;margin-bottom:3px}.task{font-size:9px;padding:4px 12px 4px 5px}.weekday{font-size:10px;padding:9px 1px}.side{grid-template-columns:1fr}.monthnav strong{font-size:19px;min-width:118px}.toolbar{margin-top:12px}.rest{right:3px;top:8px;font-size:9px;padding:1px 3px}.modal{padding:16px}.formgrid{gap:9px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.panel-tools{display:flex;gap:5px;align-items:center}.weekpick{display:flex;gap:6px;flex-wrap:wrap}.weekpick label{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:11px;display:flex;gap:4px;align-items:center}.weekpick input{width:auto!important;margin:0}.row-actions{display:flex;gap:4px;flex-shrink:0}.tiny{border:1px solid var(--line);background:#fff;border-radius:7px;padding:5px 7px;font-size:10px}.goalrow{border-left:4px solid var(--goal-color,#7183b5);padding-left:9px}.goalbar>span{background:var(--goal-color,#7183b5)}.done-date{color:#18794e}.muted-date{color:#888}.panel h2{line-height:1.4}.savedrow .desc{white-space:normal}
+#duration{width:100%;min-width:0;box-sizing:border-box}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-  <div class="brand"><div class="logo">SF</div><div><h1>STUDY FLOW</h1><div class="sub">나만의 공부 일정 관리</div></div></div>
-  <div class="actions">
-    <button class="btn small" id="undoBtn">↶ 되돌리기</button>
-    <button class="btn small" id="redoBtn">↷ 다시 실행</button>
-    <button class="btn small" id="settingsBtn">⚙ 설정</button>
-    <button class="btn small" id="backup">
+<header><div class="brand"><div class="logo">SF</div><div><h1>STUDY FLOW</h1><div class="sub">나만의 공부 일정 캘린더</div></div></div>
+<div class="actions"><button class="btn" id="undoBtn">↶ 뒤로</button><button class="btn" id="redoBtn">↷ 앞으로</button><button class="btn" id="settingsBtn">설정</button><button class="btn" id="backup">백업</button><button class="btn" id="restoreBtn">복원</button><input id="restoreFile" type="file" accept="application/json" hidden><button class="btn primary" id="addBtn">＋ 일정 추가</button></div></header>
+<div class="toolbar"><div class="monthnav"><button class="navbtn" id="prev">‹</button><strong id="monthTitle"></strong><button class="navbtn" id="next">›</button></div><button class="btn" id="todayBtn">오늘</button></div>
+<div class="layout"><section class="calendar"><div class="weekdays"><div class="weekday">일</div><div class="weekday">월</div><div class="weekday">화</div><div class="weekday">수</div><div class="weekday">목</div><div class="weekday">금</div><div class="weekday">토</div></div><div class="days" id="days"></div></section>
+<aside class="side">
+<div class="panel" id="statsPanel"><h2>이번 달 공부 현황</h2><div class="stat"><span>공부한 날짜</span><b id="taskCount">0일</b></div><div class="stat"><span>완료 일정</span><b id="doneCount">0개</b></div><div class="stat"><span>공부 문제집</span><b id="bookCount">0권</b></div><div id="monthDetails" class="hint" style="margin-top:10px"></div></div>
+<div class="panel" id="goalPanel"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 style="margin:0">회독 목표</h2><div class="panel-tools"><button class="btn small" id="goalMore">더보기</button><button class="btn small" id="addGoalBtn">＋ 목표 추가</button></div></div><div id="goalList" style="margin-top:8px"></div></div>
+<div class="panel" id="bookPanel"><h2>문제집 목록</h2><div id="bookList"></div><div class="hint" style="margin-top:10px">일정에 입력한 문제집은 자동 저장돼요. 이미 등록한 일정에는 영향을 주지 않아요.</div></div>
+<div class="panel" id="savedPanel"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">내 일정 보관함</h2><div class="panel-tools"><button class="btn small" id="savedEditBtn">편집</button><button class="btn small" id="savedMore">더보기</button></div></div><div id="savedList"></div><div class="hint" style="margin-top:8px">다시 등록을 누르면 오늘부터 같은 과목·문제집·범위로 새 일정이 만들어져요.</div></div>
+<div class="panel"><h2>사용 방법</h2><div class="hint">• 빈 날짜를 누르면 그 날짜로 새 일정을 추가해요.<br>• 일정 막대를 누르면 수정할 수 있어요.<br>• 일정 막대를 다른 날짜로 끌면 이동하고, 뒤 일정은 겹치지 않게 자동으로 밀려요.<br>• 막대 오른쪽 손잡이로 기간을 조절할 수 있어요.<br>• 날짜를 누른 뒤 해당 날짜 일정의 하루 제외를 선택할 수 있어요.<br>• 일요일은 휴식일이며 공부일 수에서 제외돼요.</div></div>
+</aside></div></div>
+<div class="modalback" id="modalback"><div class="modal"><h2 id="modalTitle">일정 추가</h2>
+<div class="formgrid">
+<div class="field"><label>과목</label><select id="subject"><option>국어</option><option>영어</option><option>행정법</option><option>행정학</option><option>기타</option></select></div>
+<div class="field"><label>문제집</label><input id="book" autocomplete="off" placeholder="문제집 이름을 입력하거나 선택"><div class="choice-list" id="bookChoices"></div></div>
+<div class="field"><label>시작일</label><input id="start" type="date"></div><div class="field"><label>공부일 수</label><input id="duration" type="number" min="1" max="365" value="3"></div><div class="field full"><label>공부에서 제외할 요일</label><div class="weekpick" id="excludeDaysPicker"></div><span class="hint">선택한 요일은 공부일 수와 일정 기간 계산에서 제외돼요.</span></div><input id="excludeSunday" type="checkbox" checked hidden>
+<div class="field full"><label>단원 / 범위</label><input id="range" placeholder="예: 1단원 ~ 3단원"></div>
+<div class="field full"><label>달력에 표시할 항목</label><div class="checkrow"><label><input id="showSubject" type="checkbox" checked> 과목</label><label><input id="showBook" type="checkbox" checked> 문제집</label><label><input id="showRange" type="checkbox" checked> 단원·범위</label></div></div>
+<div class="field"><label>색상</label><input id="color" type="color" value="#f5c7c4"></div><div class="field"><label>완료 여부</label><select id="done"><option value="false">진행 중</option><option value="true">완료</option></select></div>
+</div><div class="modalfoot"><button class="btn" id="deleteBtn" style="display:none">일정 삭제</button><div class="rightbuttons"><button class="btn" id="cancelBtn">취소</button><button class="btn primary" id="saveBtn">저장</button></div></div></div></div>
+<div class="modalback" id="dayBack"><div class="modal"><h2 id="dayTitle">날짜 일정</h2><div id="dayItems" class="dateitems"></div><div class="modalfoot"><button class="btn" id="dayAdd">＋ 이 날짜에 일정 추가</button><div class="rightbuttons"><button class="btn" id="deleteDayBtn" style="color:#b42318;border-color:#efc7c4">이 날짜 전체 삭제</button><button class="btn" id="dayClose">닫기</button></div></div></div></div>
+<div class="modalback" id="goalBack"><div class="modal"><h2 id="goalModalTitle">회독 목표 설정</h2><div class="formgrid">
+<div class="field"><label>과목</label><select id="goalSubject"><option>국어</option><option>영어</option><option>행정법</option><option>행정학</option><option>기타</option></select></div>
+<div class="field"><label>문제집</label><input id="goalBook" placeholder="예: 행정법 기출"></div>
+<div class="field"><label>전체 단원 수</label><input id="goalUnits" type="number" min="1" value="6"></div><div class="field"><label>목표 회독 수</label><input id="goalRounds" type="number" min="1" value="5"></div>
+<div class="field"><label>현재 회독</label><input id="goalCurrentRound" type="number" min="1" value="1"></div><div class="field"><label>현재 회독의 단원</label><input id="goalCurrentUnit" type="text" inputmode="text" value="0단원" placeholder="예: 3단원, 행정행위, 15~20번"></div></div><div class="hint" style="margin-top:10px">예: 전체 6단원, 목표 5회독, 현재 2회독 6단원이면 2회독을 마친 상태로 계산해요. 다음은 3회독 1단원이에요.</div><div class="modalfoot"><button class="btn" id="deleteGoalBtn" style="display:none">목표 삭제</button><div class="rightbuttons"><button class="btn" id="cancelGoalBtn">취소</button><button class="btn primary" id="saveGoalBtn">저장</button></div></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='study-flow-v2-data';
+const palette={국어:'#f2b8b5',영어:'#f4c58e',행정법:'#b8c9eb',행정학:'#e8b9d7',기타:'#c9c9c9'};
+let data={tasks:[],books:{},goals:{}},view=new Date(),editing=null,gesture=null,toastTimer=null,selectedDay=null,editingGoal=null;
+const $=id=>document.getElementById(id),pad=n=>String(n).padStart(2,'0');
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromISO=s=>{let [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{let d=fromISO(s);d.setDate(d.getDate()+n);return iso(d)};
+let workEnd=(start,dur,excludeSunday=false)=>{let d=fromISO(start),count=0;while(count<Math.max(1,dur)){if(!excludeSunday||d.getDay()!==0)count++;if(count<Math.max(1,dur))d.setDate(d.getDate()+1)}return iso(d)};
+let workCount=(a,b,excludeSunday=false)=>{let d=fromISO(a),e=fromISO(b),n=0;while(d<=e){if(!excludeSunday||d.getDay()!==0)n++;d.setDate(d.getDate()+1)}return n};
+let isActive=(t,key)=>key>=t.start&&key<=t.end&&!(t.skipDates||[]).includes(key)&&!(t.excludeSunday&&fromISO(key).getDay()===0);
+function bookKey(subject,book){return subject+'::'+book}
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.tasks)){data={tasks:x.tasks.map(t=>({...t,skipDates:Array.isArray(t.skipDates)?t.skipDates:[],showSubject:t.showSubject!==false,showBook:t.showBook!==false,showRange:t.showRange!==false,excludeSunday:t.excludeSunday!==false})),books:x.books||{},goals:x.goals||{},settings:x.settings||{},hiddenBooks:x.hiddenBooks||[],hiddenSaved:x.hiddenSaved||[]};for(const [k,v] of Object.entries(data.books)){if(!k.includes('::')){let task=data.tasks.find(t=>t.book===k);let nk=bookKey(task?.subject||'기타',k);if(!data.books[nk])data.books[nk]=v;delete data.books[k]}}}}catch(e){}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function showToast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',2200)}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ $('monthTitle').textContent=`${view.getFullYear()}년 ${view.getMonth()+1}월`;
+ const first=new Date(view.getFullYear(),view.getMonth(),1),start=new Date(first);start.setDate(1-first.getDay());
+ const today=iso(new Date()),days=$('days');days.innerHTML='';
+ for(let i=0;i<42;i++){let d=new Date(start);d.setDate(start.getDate()+i);let key=iso(d),cell=document.createElement('div');cell.className='day'+(d.getMonth()!==view.getMonth()?' other':'')+(d.getDay()===0?' sunday':'')+(key===today?' today':'');cell.dataset.date=key;
+ cell.innerHTML=`<div class="num">${d.getDate()}</div>${d.getDay()===0?'<span class="rest">휴식</span>':''}`;
+ data.tasks.filter(t=>isActive(t,key)).forEach(t=>{let el=document.createElement('div');el.className='task'+(t.done?' done':'');el.style.setProperty('--c',t.color||palette[t.subject]||'#ccc');el.style.background=(t.color||palette[t.subject]||'#ccc')+'66';el.dataset.id=t.id;el.dataset.date=key;
+ let labels=[];if(t.showSubject!==false)labels.push(esc(t.subject));if(t.showBook!==false&&t.book)labels.push(esc(t.book));let title=labels.join(' · ');if(t.showRange!==false&&t.range)title+=(title?' / ':'')+esc(t.range);el.innerHTML=`<span>${title||'일정'}</span>${key===t.end?'<span class="grip" title="기간 조절">⋮</span>':''}`;
+ el.addEventListener('click',e=>{e.stopPropagation();if(!el.dataset.suppress)openEdit(t.id)});el.addEventListener('pointerdown',startGesture);cell.appendChild(el)});
+ cell.addEventListener('click',()=>openDay(key));days.appendChild(cell)}
+ const month=iso(new Date(view.getFullYear(),view.getMonth(),1)).slice(0,7);
+ const monthStart=month+'-01',monthEnd=iso(new Date(view.getFullYear(),view.getMonth()+1,0));let activeDays=new Set(),monthly={};
+ data.tasks.forEach(t=>{let d=t.start>monthStart?t.start:monthStart,e=t.end<monthEnd?t.end:monthEnd;while(d<=e){if(isActive(t,d)){activeDays.add(d);monthly[t.subject]=(monthly[t.subject]||0)+1}d=addDays(d,1)}});
+ $('taskCount').textContent=activeDays.size+'일';$('doneCount').textContent=data.tasks.filter(t=>t.start<=monthEnd&&t.end>=monthStart&&t.done).length+'개';$('bookCount').textContent=Object.keys(data.books).length+'권';
+ $('monthDetails').innerHTML=Object.entries(monthly).map(([k,v])=>`<div class="stat"><span>${esc(k)}</span><b>${v}일</b></div>`).join('')||'이번 달 공부 일정이 없어요.';
+ renderCurrent();renderSaved();renderBooks();renderGoals();
+}
+function renderBooks(){let names=Object.keys(data.books);$('bookList').innerHTML=names.length?names.map(k=>{let [sub,name]=k.split('::');return `<div class="bookrow"><span class="dot" style="width:9px;height:9px;border-radius:3px;background:${data.books[k]}"></span><span class="name">${esc(sub)} · ${esc(name)}</span><button data-book="${esc(k)}">삭제</button></div>`}).join(''):'<div class="empty">저장된 문제집이 없습니다.</div>';
+ $('bookList').querySelectorAll('button').forEach(b=>b.onclick=()=>{delete data.books[b.dataset.book];save();render();showToast('문제집 목록에서 삭제했어요.')})}
+function renderSaved(){let arr=[...data.tasks].sort((a,b)=>b.start.localeCompare(a.start));$('savedList').innerHTML=arr.length?arr.map(t=>`<div class="savedrow"><div class="desc"><b>${esc(t.subject)} · ${esc(t.book||'문제집 미입력')}</b><br></div><div class="savedactions"><button class="btn small" data-reuse="${esc(t.id)}">다시 등록</button></div></div>`).join(''):'<div class="empty">등록한 일정이 여기에 저장돼요.</div>';
+ $('savedList').querySelectorAll('[data-reuse]').forEach(b=>b.onclick=()=>reuseTask(b.dataset.reuse))}
+function renderStats(){}
+function allBookKeys(){let s=new Set(Object.keys(data.books||{}));data.tasks.forEach(t=>{if(t.book)s.add(bookKey(t.subject,t.book))});Object.keys(data.goals||{}).forEach(k=>s.add(k));return [...s].filter(k=>!(data.hiddenBooks||[]).includes(k))}
+function taskRow(t){return `<div class="savedrow"><div class="desc"><b>${esc(t.subject)} · ${esc(t.book||'문제집 미입력')}</b><br><span class="hint">${esc(t.start)} ~ ${esc(t.end)} · ${t.duration||1}일</span></div><div class="savedactions"><button class="btn small" data-edit="${esc(t.id)}">수정</button></div></div>`}
+let currentExpanded=false,currentEditing=false,savedExpanded=false,savedEditing=false,goalExpanded=false,bookExpanded=false;
+function renderCurrent(){let order=data.settings?.taskOrder||[],a=[...data.tasks].sort((x,y)=>{let ix=order.indexOf(x.id),iy=order.indexOf(y.id);if(ix<0&&iy<0)return x.start.localeCompare(y.start);return (ix<0?9999:ix)-(iy<0?9999:iy)}),shown=currentExpanded?a:a.slice(0,1);$('currentList').innerHTML=shown.length?shown.map(taskRow).join(''):'<div class="empty">현재 적용 중인 일정이 없습니다.</div>';$('currentList').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));$('currentMore').textContent=currentExpanded?'접기':'더보기';$('currentEditBtn').textContent=currentEditing?'편집 완료':'편집'}
+function renderSaved(){let m=new Map();data.tasks.forEach(t=>{let k=bookKey(t.subject,t.book||'문제집 미입력');if(!m.has(k))m.set(k,{subject:t.subject,book:t.book||'문제집 미입력',items:[]});m.get(k).items.push(t)});let a=[...m.entries()].filter(([k])=>!data.hiddenSaved.includes(k)),order=data.settings?.savedOrder||[];a.sort((x,y)=>{let i=order.indexOf(x[0]),j=order.indexOf(y[0]);return (i<0?9999:i)-(j<0?9999:j)});let shown=savedExpanded?a:a.slice(0,3);$('savedList').innerHTML=shown.length?shown.map(([k,g])=>`<div class="savedrow"><div class="desc"><b>${esc(g.subject)} · ${esc(g.book)}</b></div><div class="savedactions"><button class="btn small" data-group="${esc(k)}">다시 등록</button>${savedEditing?`<button class="tiny" data-group-hide="${esc(k)}">삭제</button>`:''}</div></div>`).join(''):'<div class="empty">등록한 일정이 없습니다.</div>';$('savedList').querySelectorAll('[data-group]').forEach(b=>b.onclick=()=>{let t=data.tasks.find(x=>bookKey(x.subject,x.book||'문제집 미입력')===b.dataset.group);if(t)reuseTask(t.id)});$('savedList').querySelectorAll('[data-group-hide]').forEach(b=>b.onclick=()=>{if(!confirm('이 그룹을 보관함에서만 삭제할까요? 기존 일정은 유지돼요.'))return;data.hiddenSaved.push(b.dataset.groupHide);save();renderSaved()});$('savedMore').textContent=savedExpanded?'접기':'더보기';$('savedEditBtn').textContent=savedEditing?'편집 완료':'편집'}
+function renderGoals(){let entries=Object.entries(data.goals||{}),shown=goalExpanded?entries:entries.slice(0,3);$('goalList').innerHTML=shown.length?shown.map(([k,g])=>{let total=Math.max(1,Number(g.units)||1),target=Math.max(1,Number(g.rounds)||1),r=Math.max(1,Number(g.currentRound)||1),raw=String(g.currentUnit??'0단원'),u=Math.max(0,Math.min(total,parseInt(raw.match(/\d+/)?.[0]||'0',10)||0)),done=Math.min(target*total,Math.max(0,(r-1)*total+u)),pct=Math.round(done/(target*total)*100);return `<div class="goalrow"><div class="goalhead"><b>${esc(g.subject)} · ${esc(g.book)}</b><button class="btn small" data-editgoal="${esc(k)}">진도 수정</button></div><div class="goalbar"><span style="width:${pct}%"></span></div><div class="goalmeta">현재 ${r}회독 ${esc(raw)} · 목표 ${target}회독 · ${pct}% 진행</div></div>`}).join(''):'<div class="empty">문제집별 회독 목표를 설정할 수 있어요.</div>';$('goalList').querySelectorAll('[data-editgoal]').forEach(b=>b.onclick=()=>openGoal(b.dataset.editgoal))}
+function renderStats(){}
+function openEdit(id){editing=id;let t=data.tasks.find(x=>x.id===id);if(!t)return;$('modalTitle').textContent='일정 수정';$('subject').value=t.subject;$('book').value=t.book||'';$('start').value=t.start;$('duration').value=t.duration||workCount(t.start,t.end,t.excludeSunday);$('range').value=t.range||'';$('color').value=t.color||palette[t.subject]||'#ccc';$('done').value=String(!!t.done);$('showSubject').checked=t.showSubject!==false;$('showBook').checked=t.showBook!==false;$('showRange').checked=t.showRange!==false;setWeekPicker(t.excludeDays||[]);$('modalback').classList.add('show');$('deleteBtn').style.display='block'}
+function openNew(date=null){editing=null;$('modalTitle').textContent='일정 추가';$('subject').value='국어';$('book').value='';$('start').value=date||iso(new Date());$('duration').value=3;$('range').value='';$('color').value=palette['국어'];$('done').value='false';$('showSubject').checked=true;$('showBook').checked=true;$('showRange').checked=true;setWeekPicker(data.settings?.excludeDays||[]);$('modalback').classList.add('show');$('deleteBtn').style.display='none'}
+function setWeekPicker(selected=[]){let days=['일','월','화','수','목','금','토'];$('excludeDaysPicker').innerHTML=days.map((d,i)=>`<label><input type="checkbox" value="${i}" ${selected.includes(i)?'checked':''}>${d}</label>`).join('')}
+function getExcludeDays(){return [...$('excludeDaysPicker').querySelectorAll('input:checked')].map(x=>Number(x.value))}
+function endForDays(start,dur,excluded=[]){let d=fromISO(start),count=0;while(count<Math.max(1,dur)){if(!excluded.includes(d.getDay()))count++;if(count<Math.max(1,dur))d.setDate(d.getDate()+1)}return iso(d)}
+function countWorkDays(a,b,excluded=[]){let d=fromISO(a),e=fromISO(b),n=0;while(d<=e){if(!excluded.includes(d.getDay()))n++;d.setDate(d.getDate()+1)}return n}
+function saveTask(){let subject=$('subject').value,book=$('book').value.trim(),start=$('start').value,duration=Math.max(1,Number($('duration').value)||1),excludeDays=getExcludeDays(),end=endForDays(start,duration,excludeDays),t={id:editing||('t'+Date.now()),subject,book,start,end,duration,excludeDays,excludeSunday:excludeDays.includes(0),range:$('range').value.trim(),color:$('color').value,done:$('done').value==='true',showSubject:$('showSubject').checked,showBook:$('showBook').checked,showRange:$('showRange').checked,skipDates:editing?(data.tasks.find(x=>x.id===editing)?.skipDates||[]):[]};if(!start){showToast('시작일을 선택해 주세요.');return}if(editing){let i=data.tasks.findIndex(x=>x.id===editing);if(i>=0)data.tasks[i]=t}else data.tasks.push(t);if(book)data.books[bookKey(subject,book)]=t.color;data.settings=data.settings||{};data.settings.excludeDays=excludeDays;save();$('modalback').classList.remove('show');render();showToast('일정을 저장했어요.')}
+function reuseTask(id){let t=data.tasks.find(x=>x.id===id);if(!t)return;editing=null;openNew(iso(new Date()));$('subject').value=t.subject;$('book').value=t.book||'';$('duration').value=t.duration||1;$('range').value=t.range||'';$('color').value=t.color||palette[t.subject]||'#ccc';$('showSubject').checked=t.showSubject!==false;$('showBook').checked=t.showBook!==false;$('showRange').checked=t.showRange!==false;setWeekPicker(t.excludeDays||[])}
+function openDay(key){selectedDay=key;let items=data.tasks.filter(t=>isActive(t,key));$('dayTitle').textContent=key+' 일정';$('dayItems').innerHTML=items.length?items.map(t=>`<div class="dateitem"><span>${esc(t.subject)} · ${esc(t.book||'문제집 미입력')} ${esc(t.range||'')}</span><button class="btn small" data-day-edit="${esc(t.id)}">수정</button></div>`).join(''):'<div class="empty">이 날짜에는 일정이 없어요.</div>';$('dayItems').querySelectorAll('[data-day-edit]').forEach(b=>b.onclick=()=>{$('dayBack').classList.remove('show');openEdit(b.dataset.dayEdit)});$('dayBack').classList.add('show')}
+function startGesture(e){let el=e.currentTarget;if(e.target.classList.contains('grip')){gesture={type:'resize',id:el.dataset.id,startX:e.clientX,origin:el.dataset.date};e.preventDefault();return}gesture={type:'move',id:el.dataset.id,startX:e.clientX,startY:e.clientY,origin:el.dataset.date};el.setPointerCapture?.(e.pointerId)}
+document.addEventListener('pointerup',e=>{if(!gesture)return;let g=gesture;gesture=null;if(g.type==='move'){let target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.day');if(target&&target.dataset.date&&target.dataset.date!==g.origin){let t=data.tasks.find(x=>x.id===g.id);if(t){let dur=t.duration||countWorkDays(t.start,t.end,t.excludeDays||[]);t.start=target.dataset.date;t.end=endForDays(t.start,dur,t.excludeDays||[]);save();render()}}}else{let diff=Math.round((e.clientX-g.startX)/35);if(diff){let t=data.tasks.find(x=>x.id===g.id);if(t){let days=t.excludeDays||[];let newEnd=addDays(t.end,diff);if(newEnd<t.start)newEnd=t.start;t.end=newEnd;t.duration=countWorkDays(t.start,t.end,days);save();render()}}}});
+$('addBtn').onclick=()=>openNew();$('cancelBtn').onclick=()=>$('modalback').classList.remove('show');$('saveBtn').onclick=saveTask;$('deleteBtn').onclick=()=>{if(!editing)return;if(confirm('이 일정을 삭제할까요?')){data.tasks=data.tasks.filter(t=>t.id!==editing);save();$('modalback').classList.remove('show');render()}};
+$('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};$('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};$('todayBtn').onclick=()=>{view=new Date();render()};
+$('dayClose').onclick=()=>$('dayBack').classList.remove('show');$('dayAdd').onclick=()=>{let d=selectedDay;$('dayBack').classList.remove('show');openNew(d)};
+$('addGoalBtn').onclick=()=>openGoal();$('goalMore').onclick=()=>{goalExpanded=!goalExpanded;renderGoals()};$('savedMore').onclick=()=>{savedExpanded=!savedExpanded;renderSaved()};$('savedEditBtn').onclick=()=>{savedEditing=!savedEditing;renderSaved()};$('currentMore').onclick=()=>{currentExpanded=!currentExpanded;renderCurrent()};$('currentEditBtn').onclick=()=>{currentEditing=!currentEditing;renderCurrent()};
+$('cancelGoalBtn').onclick=()=>$('goalBack').classList.remove('show');$('saveGoalBtn').onclick=()=>{let subject=$('goalSubject').value,book=$('goalBook').value.trim();if(!book){showToast('문제집 이름을 입력해 주세요.');return}let key=bookKey(subject,book);data.goals[key]={subject,book,units:Math.max(1,Number($('goalUnits').value)||1),rounds:Math.max(1,Number($('goalRounds').value)||1),currentRound:Math.max(1,Number($('goalCurrentRound').value)||1),currentUnit:$('goalCurrentUnit').value.trim()||'0단원',color:$('goalColor')?.value||palette[subject]};data.books[key]=data.books[key]||palette[subject];save();$('goalBack').classList.remove('show');render();showToast('목표를 저장했어요.')};
+function openGoal(key=null){editingGoal=key;let g=key?data.goals[key]:null;$('goalSubject').value=g?.subject||'행정법';$('goalBook').value=g?.book||'';$('goalUnits').value=g?.units||6;$('goalRounds').value=g?.rounds||5;$('goalCurrentRound').value=g?.currentRound||1;$('goalCurrentUnit').value=g?.currentUnit??'0단원';$('goalBack').classList.add('show')}
+$('backup').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='study-flow-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('restoreBtn').onclick=()=>$('restoreFile').click();$('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!Array.isArray(x.tasks))throw Error();if(!confirm('현재 데이터를 백업 파일 내용으로 복원할까요?'))return;data={...data,...x};save();render();showToast('복원했어요.')}catch(err){showToast('올바른 백업 파일이 아니에요.')}e.target.value=''};
+$('undoBtn').onclick=()=>showToast('백업 파일을 이용해 이전 데이터를 복원할 수 있어요.');$('redoBtn').onclick=()=>showToast('현재 버전에서는 별도 실행 취소 기록이 없어요.');
+load();
+</script>
+<script>
+/* STUDY FLOW settings + panel controls */
+(function(){
+ const panelDefs=[['statsPanel','이번 달 공부 현황'],['savedPanel','내 일정 보관함'],['currentPanel','현재 적용 중인 일정'],['goalPanel','회독 목표'],['bookPanel','문제집 목록']];
+ const side=document.querySelector('.side'),defaults=panelDefs.map(x=>x[0]);
+ data.settings=data.settings||{};
+ data.settings.panelOrder=Array.isArray(data.settings.panelOrder)?data.settings.panelOrder:defaults.slice();
+ data.settings.panelVisibility=data.settings.panelVisibility||{};
+ data.settings.pageColor=data.settings.pageColor||'#f6f4ef';
+ data.settings.panelCollapsed=data.settings.panelCollapsed||{};
+ function setupPanelFooters(){
+  defaults.forEach(id=>{
+   const panel=document.getElementById(id);if(!panel)return;
+   let content=panel.querySelector(':scope > .panel-content');
+   if(!content){
+    content=document.createElement('div');content.className='panel-content';
+    const children=[...panel.children].filter(el=>!el.classList.contains('panel-bottom-toggle'));
+    children.slice(1).forEach(el=>content.appendChild(el));
+    panel.appendChild(content);
+   }
+   let footer=panel.querySelector(':scope > .panel-bottom-toggle');
+   if(!footer){footer=document.createElement('div');footer.className='panel-bottom-toggle';footer.innerHTML='<button type="button" class="btn small" data-panel-collapse="'+id+'">닫기</button>';panel.appendChild(footer)}
+   const collapsed=data.settings.panelCollapsed[id]===true;
+   content.style.display=collapsed?'none':'';
+   footer.querySelector('button').textContent=collapsed?'펼치기':'닫기';
+  });
+ }
+ function bindPanelFooters(){
+  document.querySelectorAll('[data-panel-collapse]').forEach(button=>{
+   button.onclick=()=>{
+    const id=button.dataset.panelCollapse;
+    data.settings.panelCollapsed[id]=data.settings.panelCollapsed[id]!==true;
+    setupPanelFooters();save();
+   };
+  });
+ }
+ const style=document.createElement('style');
+ style.textContent=`
+ .settings-back{position:fixed;inset:0;background:#17171777;display:none;align-items:center;justify-content:center;padding:14px;z-index:30}
+ .settings-back.show{display:flex}.settings-modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:20px;box-shadow:0 20px 70px #0003}
+ .settings-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.settings-head h2{font-size:19px;margin:0}
+ .settings-section{border-top:1px solid var(--line);padding:15px 0}.settings-section h3{font-size:13px;margin:0 0 10px}
+ .setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f1efeb;font-size:13px}
+ .setting-row:last-child{border-bottom:0}.setting-panel-list{display:flex;flex-direction:column;gap:7px}
+ .setting-panel-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+ .setting-panel-item .panel-label{flex:1;font-size:13px}
+ .setting-panel-item input{width:18px;height:18px}.setting-order{display:flex;gap:5px}
+ .setting-order button{border:1px solid var(--line);background:#f7f6f2;border-radius:7px;padding:5px 9px;font-size:13px}
+ .setting-order button:disabled{opacity:.35;cursor:not-allowed}
+ .setting-color{width:48px;height:36px;padding:2px;border:1px solid var(--line);border-radius:8px;background:#fff}
+ .panel-bottom-toggle{display:flex;justify-content:center;margin-top:12px;padding-top:9px;border-top:1px solid var(--line)}
+ .panel-bottom-toggle .btn{min-width:82px}
+ @media(max-width:560px){.settings-modal{padding:16px}.settings-head h2{font-size:17px}}
+ `;
+ document.head.appendChild(style);
+ const settingsBack=document.createElement('div');
+ settingsBack.className='settings-back';settingsBack.id='settingsBack';
+ settingsBack.innerHTML=`<div class="settings-modal" role="dialog" aria-modal="true" aria-label="설정">
+ <div class="settings-head"><h2>⚙️ 설정</h2><button class="btn small" id="settingsClose">닫기</button></div>
+ <section class="settings-section"><h3>페이지 디자인</h3><div class="setting-row"><span>페이지 배경색</span><input class="setting-color" id="pageColor" type="color" value="#f6f4ef"></div><div class="hint">선택한 색상은 달력과 기본 페이지 배경에 적용돼요.</div></section>
+ <section class="settings-section"><h3>패널 관리</h3><div class="hint" style="margin-bottom:9px">위·아래 버튼으로 패널 순서를 바꾸고, 표시 체크를 해제하면 패널을 숨길 수 있어요. 숨겨도 데이터는 삭제되지 않아요.</div><div class="setting-panel-list" id="settingPanelList"></div></section>
+ <div class="modalfoot"><button class="btn" id="settingsReset">기본 설정으로</button><div class="rightbuttons"><button class="btn primary" id="settingsDone">완료</button></div></div></div>`;
+ document.body.appendChild(settingsBack);
+ function applyTheme(){
+  const c=data.settings.pageColor||'#f6f4ef';
+  document.documentElement.style.setProperty('--bg',c);
+  const dark=(parseInt(c.slice(1,3),16)*299+parseInt(c.slice(3,5),16)*587+parseInt(c.slice(5,7),16)*114)/1000<135;
+  document.documentElement.style.setProperty('--paper',dark?'#2b2e36':'#ffffff');
+  document.documentElement.style.setProperty('--ink',dark?'#f4f4f4':'#252525');
+  document.documentElement.style.setProperty('--line',dark?'#454954':'#e9e6df');
+  document.documentElement.style.setProperty('--muted',dark?'#b8bdc8':'#858585');
+ }
+ function applyPanelConfig(){
+  const ids=defaults.slice(),order=(data.settings.panelOrder||[]).filter(id=>ids.includes(id));
+  ids.forEach(id=>{if(!order.includes(id))order.push(id)});
+  data.settings.panelOrder=order;
+  order.forEach(id=>{const el=document.getElementById(id);if(el)side.appendChild(el)});
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=data.settings.panelVisibility[id]===false?'none':''});
+ }
+ function makePanelSettings(){
+  const list=document.getElementById('settingPanelList');
+  const order=(data.settings.panelOrder||defaults).filter(id=>defaults.includes(id));
+  defaults.forEach(id=>{if(!order.includes(id))order.push(id)});
+  data.settings.panelOrder=order;
+  list.innerHTML=order.map((id,index)=>{
+   const label=panelDefs.find(x=>x[0]===id)?.[1]||id,checked=data.settings.panelVisibility[id]!==false;
+   return `<div class="setting-panel-item" data-panel-id="${id}"><span class="panel-label">${label}</span><div class="setting-order"><button type="button" data-panel-up="${id}" ${index===0?'disabled':''} aria-label="위로">↑</button><button type="button" data-panel-down="${id}" ${index===order.length-1?'disabled':''} aria-label="아래로">↓</button></div><label style="display:flex;align-items:center;gap:6px;font-size:11px;color:#777"><input type="checkbox" data-panel-visible="${id}" ${checked?'checked':''}> 표시</label></div>`;
+  }).join('');
+  list.querySelectorAll('[data-panel-visible]').forEach(input=>input.addEventListener('change',()=>{
+   data.settings.panelVisibility[input.dataset.panelVisible]=input.checked;applyPanelConfig();save();
+  }));
+  list.querySelectorAll('[data-panel-up],[data-panel-down]').forEach(button=>button.addEventListener('click',()=>{
+   const id=button.dataset.panelUp||button.dataset.panelDown,ids=[...data.settings.panelOrder],i=ids.indexOf(id),j=i+(button.dataset.panelUp?-1:1);
+   if(j<0||j>=ids.length)return;
+   [ids[i],ids[j]]=[ids[j],ids[i]];
+   data.settings.panelOrder=ids;applyPanelConfig();makePanelSettings();save();
+  }));
+ }
+ $('settingsBtn').onclick=()=>{$('pageColor').value=data.settings.pageColor||'#f6f4ef';makePanelSettings();settingsBack.classList.add('show')};
+ function closeSettings(){settingsBack.classList.remove('show')}
+ $('settingsClose').onclick=closeSettings;$('settingsDone').onclick=closeSettings;
+ settingsBack.addEventListener('click',e=>{if(e.target===settingsBack)closeSettings()});
+ $('pageColor').addEventListener('input',e=>{data.settings.pageColor=e.target.value;applyTheme();save()});
+ $('settingsReset').onclick=()=>{
+  if(!confirm('패널 표시와 순서, 배경색을 기본값으로 되돌릴까요?'))return;
+  data.settings.pageColor='#f6f4ef';data.settings.panelOrder=defaults.slice();data.settings.panelVisibility={};data.settings.panelCollapsed={};
+  applyTheme();applyPanelConfig();setupPanelFooters();bindPanelFooters();makePanelSettings();$('pageColor').value='#f6f4ef';save();showToast('설정을 초기화했어요.');
+ };
+ window.renderCurrent=function(){
+  const order=data.settings.taskOrder||[];
+  const all=[...data.tasks].sort((a,b)=>{const ia=order.indexOf(a.id),ib=order.indexOf(b.id);if(ia<0&&ib<0)return a.start.localeCompare(b.start);return (ia<0?99999:ia)-(ib<0?99999:ib)});
+  const shown=currentExpanded?all:all.slice(0,1);
+  $('currentList').innerHTML=shown.length?shown.map(t=>`<div class="savedrow" data-sort-id="${esc(t.id)}"><div class="desc"><b>${esc(t.subject)} · ${esc(t.book||'문제집 미입력')}</b><br><span class="hint">${esc(t.start)} ~ ${esc(t.end)} · ${t.duration||1}일</span></div><div class="savedactions"><button class="btn small" data-edit="${esc(t.id)}">수정</button>${currentEditing?`<button class="tiny" data-task-del="${esc(t.id)}">삭제</button>`:''}</div></div>`).join(''):'<div class="empty">현재 적용 중인 일정이 없습니다.</div>';
+  $('currentList').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
+  $('currentList').querySelectorAll('[data-task-del]').forEach(b=>b.onclick=()=>{if(!confirm('이 일정을 삭제할까요?'))return;data.tasks=data.tasks.filter(t=>t.id!==b.dataset.taskDel);save();render()});
+  $('currentMore').textContent=currentExpanded?'접기':'더보기';$('currentEditBtn').textContent=currentEditing?'편집 완료':'편집';
+ };
+ window.renderSaved=function(){
+  const map=new Map();data.tasks.forEach(t=>{const k=bookKey(t.subject,t.book||'문제집 미입력');if(!map.has(k))map.set(k,{subject:t.subject,book:t.book||'문제집 미입력',items:[]});map.get(k).items.push(t)});
+  let arr=[...map.entries()].filter(([k])=>!(data.hiddenSaved||[]).includes(k)),order=data.settings.savedOrder||[];
+  arr.sort((a,b)=>{const ia=order.indexOf(a[0]),ib=order.indexOf(b[0]);if(ia<0&&ib<0)return a[0].localeCompare(b[0]);return (ia<0?99999:ia)-(ib<0?99999:ib)});
+  const shown=savedExpanded?arr:arr.slice(0,3);
+  $('savedList').innerHTML=shown.length?shown.map(([k,g])=>`<div class="savedrow" data-sort-id="${esc(k)}"><div class="desc"><b>${esc(g.subject)} · ${esc(g.book)}</b></div><div class="savedactions"><button class="btn small" data-group="${esc(k)}">바로 등록</button>${savedEditing?`<button class="tiny" data-group-hide="${esc(k)}">삭제</button>`:''}</div></div>`).join(''):'<div class="empty">등록한 일정이 없습니다.</div>';
+  $('savedList').querySelectorAll('[data-group]').forEach(b=>b.onclick=()=>{const t=data.tasks.find(x=>bookKey(x.subject,x.book||'문제집 미입력')===b.dataset.group);if(t)reuseTask(t.id)});
+  $('savedList').querySelectorAll('[data-group-hide]').forEach(b=>b.onclick=()=>{if(!confirm('이 그룹을 보관함에서만 삭제할까요? 기존 일정은 유지돼요.'))return;data.hiddenSaved=data.hiddenSaved||[];data.hiddenSaved.push(b.dataset.groupHide);save();renderSaved()});
+  $('savedMore').textContent=savedExpanded?'접기':'더보기';$('savedEditBtn').textContent=savedEditing?'편집 완료':'편집';
+ };
+ window.renderGoals=function(){
+  let entries=Object.entries(data.goals||{}),order=data.settings.goalOrder||[];
+  entries.sort((a,b)=>{const ia=order.indexOf(a[0]),ib=order.indexOf(b[0]);if(ia<0&&ib<0)return a[0].localeCompare(b[0]);return (ia<0?99999:ia)-(ib<0?99999:ib)});
+  const shown=goalExpanded?entries:entries.slice(0,3);
+  $('goalList').innerHTML=shown.length?shown.map(([k,g])=>{
+   const total=Math.max(1,Number(g.units)||1),target=Math.max(1,Number(g.rounds)||1),r=Math.max(1,Number(g.currentRound)||1);
+   const raw=String(g.currentUnit??'0단원'),unitNumber=Math.max(0,Math.min(total,parseInt(raw.match(/\d+/)?.[0]||'0',10)||0));
+   const done=Math.min(target*total,Math.max(0,(r-1)*total+unitNumber)),pct=Math.round(done/(target*total)*100);
+   return `<div class="goalrow" data-sort-id="${esc(k)}" style="--goal-color:${g.color||palette[g.subject]||'#7183b5'}"><div class="goalhead"><span><b>${esc(g.subject)} · ${esc(g.book)}</b></span><button class="btn small" data-editgoal="${esc(k)}">수정</button></div><div class="goalbar"><span style="width:${pct}%"></span></div><div class="goalmeta">현재 ${r}회독 ${esc(raw)} · 목표 ${target}회독 · ${pct}%</div></div>`;
+  }).join(''):'<div class="empty">문제집별 회독 목표를 설정할 수 있어요.</div>';
+  $('goalList').querySelectorAll('[data-editgoal]').forEach(b=>b.onclick=()=>openGoal(b.dataset.editgoal));
+  $('goalMore').textContent=goalExpanded?'접기':'더보기';
+ };
+ window.renderBooks=function(){
+  const keys=allBookKeys(),shown=bookExpanded?keys:keys.slice(0,3);
+  $('bookList').innerHTML=shown.length?shown.map(k=>{const [sub,name]=k.split('::');return `<div class="bookrow"><span class="name">${esc(sub)} · ${esc(name)}</span><button data-hidebook="${esc(k)}">목록 삭제</button></div>`}).join(''):'<div class="empty">저장된 문제집이 없습니다.</div>';
+  $('bookList').querySelectorAll('[data-hidebook]').forEach(b=>b.onclick=()=>{const k=b.dataset.hidebook;if(!confirm('문제집 목록에서만 삭제할까요? 기존 일정과 회독 목표는 유지돼요.'))return;data.hiddenBooks=data.hiddenBooks||[];data.hiddenBooks.push(k);save();render();showToast('문제집 목록에서 숨겼어요.')});
+ };
+ if(!$('bookMore')){const b=document.createElement('button');b.id='bookMore';b.className='btn small';b.textContent='더보기';$('bookPanel').querySelector('h2').insertAdjacentElement('afterend',b)}
+ $('bookMore').onclick=()=>{bookExpanded=!bookExpanded;renderBooks();$('bookMore').textContent=bookExpanded?'접기':'더보기'};
+ $('bookPanel').querySelector('h2').style.display='inline-block';
+ applyTheme();applyPanelConfig();setupPanelFooters();bindPanelFooters();
+ const oldRender=render;
+ render=function(){oldRender();renderCurrent();renderSaved();renderBooks();renderGoals();renderStats();applyTheme();applyPanelConfig();setupPanelFooters();bindPanelFooters()};
+ render();
+})();
+</script>
+</body>
+</html>
